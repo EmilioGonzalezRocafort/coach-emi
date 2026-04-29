@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coach Emi</title>
+<meta name="theme-color" content="#4f46e5">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Coach Emi">
+<style>
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-light: #eef2ff;
+  --green: #16a34a;
+  --green-light: #dcfce7;
+  --yellow: #ca8a04;
+  --yellow-light: #fef9c3;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --gray: #6b7280;
+  --gray-light: #f3f4f6;
+  --border: #e5e7eb;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --bg: #f1f5fb;
+  --card: #ffffff;
+  --shadow: 0 4px 18px rgba(0,0,0,0.07);
+  --radius: 18px;
+  --header-grad: linear-gradient(135deg, #2d24b8 0%, #5b21b6 100%);
+  --goal-grad: linear-gradient(135deg, #eef2ff 0%, #faf5ff 100%);
+  --modal-bg: #ffffff;
+  --input-bg: #f3f4f6;
+}
+[data-theme="dark"] {
+  --primary: #818cf8;
+  --primary-dark: #a5b4fc;
+  --primary-light: #1e1b4b;
+  --green: #4ade80;
+  --green-light: #052e16;
+  --yellow: #facc15;
+  --yellow-light: #422006;
+  --red: #f87171;
+  --red-light: #450a0a;
+  --gray: #9ca3af;
+  --gray-light: #1f2937;
+  --border: #374151;
+  --text: #f3f4f6;
+  --text-muted: #9ca3af;
+  --bg: #0b1120;
+  --card: #111827;
+  --shadow: 0 4px 18px rgba(0,0,0,0.4);
+  --header-grad: linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%);
+  --goal-grad: linear-gradient(135deg, #1e1b4b 0%, #3b0764 100%);
+  --modal-bg: #1f2937;
+  --input-bg: #1f2937;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 20px 16px 80px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  transition: background 0.25s, color 0.25s;
+}
+.container { max-width: 680px; margin: auto; }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+/* ── HERO motivador ── */
+.hero-card {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 28%, #c026d3 62%, #ec4899 100%);
+  background-size: 220% 220%;
+  animation: gradientShift 14s ease-in-out infinite;
+  color: white;
+  padding: 22px 22px 20px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  box-shadow: 0 10px 40px rgba(124, 58, 237, 0.35);
+}
+[data-theme="dark"] .hero-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 30%, #831843 70%, #4c0519 100%);
+  background-size: 220% 220%;
+  animation: gradientShift 14s ease-in-out infinite;
+  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.25);
+}
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 80%; height: 180%;
+  background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+  pointer-events: none;
+}
+.hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -50%; left: -15%;
+  width: 70%; height: 140%;
+  background: radial-gradient(circle, rgba(255,200,100,0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 2;
+}
+.hero-brand {
+  font-size: 10px;
+  font-weight: 800;
+  opacity: 0.7;
+  letter-spacing: 2.5px;
+}
+.brand-dot { margin: 0 6px; opacity: 0.5; }
+.brand-date { font-weight: 600; opacity: 0.85; }
+
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.28); transform: rotate(20deg); }
+
+.hero-greeting {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  letter-spacing: -0.2px;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-streak-wrap {
+  text-align: center;
+  margin: 4px 0 18px;
+  position: relative;
+  z-index: 2;
+}
+.hero-flame {
+  font-size: 38px;
+  line-height: 1;
+  filter: drop-shadow(0 0 18px rgba(251, 191, 36, 0.55));
+  animation: floatFlame 2.6s ease-in-out infinite;
+  margin-bottom: 2px;
+}
+@keyframes floatFlame {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-6px) scale(1.06); }
+}
+.hero-num-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  line-height: 1;
+}
+.hero-num {
+  font-size: 76px;
+  font-weight: 900;
+  letter-spacing: -3px;
+  background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.65) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  text-shadow: 0 4px 30px rgba(0,0,0,0.15);
+}
+.hero-num.bump { transform: scale(1.18); }
+.hero-unit {
+  font-size: 17px;
+  font-weight: 700;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.hero-tagline {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
+  margin-top: 4px;
+  letter-spacing: 0.3px;
+}
+
+.hero-week {
+  position: relative;
+  z-index: 2;
+}
+.hero-week-bar {
+  height: 7px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.hwb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fde047, #fb923c, #ec4899);
+  border-radius: 999px;
+  transition: width 0.8s ease;
+  box-shadow: 0 0 12px rgba(253, 224, 71, 0.5);
+}
+.hwb-fill.perfect {
+  background: linear-gradient(90deg, #fde047, #ffffff, #fde047);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+.hero-week-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.92;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.hero-week-text .hwb-pct {
+  font-size: 11px;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+
+/* Goal smart card */
+.card-goal {
+  background: var(--goal-grad);
+  border: 1.5px solid var(--border);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.card-goal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--primary), #8b5cf6);
+}
+.goal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.goal-head h2 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
+.goal-tag {
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.goal-tag.tag-done { background: var(--green); }
+.goal-tag.tag-urgent { background: var(--red); }
+
+.goal-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.goal-icon-box {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  position: relative;
+  transition: transform 0.2s;
+}
+.goal-icon-box.done {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+.goal-pts-mini {
+  position: absolute;
+  bottom: -8px;
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.goal-icon-box.done .goal-pts-mini { background: var(--green); }
+.goal-info { flex: 1; min-width: 0; }
+.goal-name {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+.goal-reason {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.goal-alts {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+}
+.goal-alts-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.goal-alt-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.goal-alt {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.goal-alt .alt-pts { font-size: 10px; color: var(--primary); font-weight: 700; }
+
+/* Missing days */
+.alert-missing {
+  background: #fef3c7;
+  border: 1.5px solid #f59e0b;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+[data-theme="dark"] .alert-missing { background: #422006; }
+.alert-missing .al-icon { font-size: 26px; flex-shrink: 0; }
+.alert-missing .al-body { flex: 1; min-width: 0; }
+.alert-missing .al-title { font-weight: 700; font-size: 14px; color: #92400e; margin: 0 0 2px; }
+.alert-missing .al-sub { font-size: 13px; color: #b45309; margin: 0; }
+[data-theme="dark"] .alert-missing .al-title { color: #fde68a; }
+[data-theme="dark"] .alert-missing .al-sub   { color: #fbbf24; }
+.btn-scroll-form {
+  padding: 9px 14px;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.btn-scroll-form:hover { opacity: 0.85; }
+
+h2 { margin: 0 0 14px; font-size: 16px; font-weight: 700; color: var(--text); }
+
+.info-btn {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gray-light);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: background 0.15s;
+}
+.info-btn:hover { background: var(--border); color: var(--text); }
+
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.sec-head h2 { margin: 0; }
+.btn-share {
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-share:hover { background: var(--gray-light); color: var(--text); }
+
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.form-header h2 { margin: 0; }
+.day-select {
+  padding: 7px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  max-width: 160px;
+}
+.day-select:focus { border-color: var(--primary); }
+
+.notice {
+  background: var(--green-light);
+  color: var(--green);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.check-group { display: flex; flex-direction: column; gap: 1px; }
+label.check-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s;
+  font-size: 15px;
+  user-select: none;
+  color: var(--text);
+}
+label.check-label:hover { background: var(--gray-light); }
+label.check-label input {
+  width: 18px; height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+label.bad-label { margin-top: 6px; border-top: 1px solid var(--border); padding-top: 14px; }
+label.bad-label input { accent-color: #ef4444; }
+.pts-badge {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--gray-light);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.pts-badge-bad { background: var(--red-light); color: var(--red); }
+
+.bad-day-msg {
+  background: var(--primary-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--primary-dark);
+  margin-top: 10px;
+  line-height: 1.6;
+  display: none;
+}
+.bad-day-msg.show { display: block; }
+
+.btn-save {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, background 0.2s;
+}
+.btn-save:hover { opacity: 0.88; }
+.btn-save:active { transform: scale(0.98); }
+.btn-save.saved-state { background: var(--green); }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.stat-box {
+  background: var(--gray-light);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.stat-box .s-val { font-size: 20px; font-weight: 800; color: var(--primary); }
+.stat-box .s-lbl { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.stat-box.done { background: var(--green-light); }
+.stat-box.done .s-val { color: var(--green); }
+.stat-box.warn { background: var(--yellow-light); }
+.stat-box.warn .s-val { color: var(--yellow); }
+
+.week-calendar { display: flex; gap: 6px; margin-bottom: 16px; }
+.wc-day { flex: 1; text-align: center; }
+.wc-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+.wc-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid transparent;
+}
+.wc-dot.wc-high   { background: var(--green-light); color: var(--green); border-color: var(--green); }
+.wc-dot.wc-med    { background: var(--yellow-light); color: var(--yellow); border-color: var(--yellow); }
+.wc-dot.wc-low    { background: var(--red-light); color: var(--red); border-color: var(--red); }
+.wc-dot.wc-bad    { background: var(--gray-light); color: var(--gray); border-color: #d1d5db; }
+.wc-dot.wc-empty  { background: var(--gray-light); color: var(--border); border-color: var(--border); }
+.wc-dot.wc-today  { box-shadow: 0 0 0 3px var(--primary-light); }
+.wc-pts { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+.stats-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.legend-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.progress {
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  height: 14px;
+  margin-bottom: 8px;
+}
+.progress-bar {
+  background: linear-gradient(90deg, #22c55e, #15803d);
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.progress-bar.perfect {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+@keyframes shimmer { from { background-position: 0 0; } to { background-position: 200% 0; } }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mini-stat {
+  background: var(--primary-light);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.mini-stat .val { font-size: 22px; font-weight: 800; color: var(--primary); }
+.mini-stat .lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+
+.perfect-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #422006;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.history-header h2 { margin: 0; }
+.btn-toggle {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 20px;
+  background: var(--gray-light);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-toggle:hover { background: var(--border); }
+
+.history-item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 14px;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: box-shadow 0.15s;
+  background: var(--card);
+}
+.history-item:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.day-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.dot-high { background: var(--green); }
+.dot-med  { background: var(--yellow); }
+.dot-low  { background: var(--red); }
+.dot-bad  { background: #9ca3af; }
+
+.h-date { min-width: 88px; }
+.h-date .d-main { font-weight: 700; font-size: 13px; color: var(--text); }
+.h-date .d-sub  { font-size: 11px; color: var(--text-muted); }
+
+.h-chips { flex: 1; display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--gray-light);
+  color: var(--text);
+}
+.chip-bad { background: var(--red-light); color: var(--red); }
+
+.h-pts {
+  font-weight: 800;
+  font-size: 15px;
+  min-width: 48px;
+  text-align: right;
+}
+.pts-high { color: var(--green); }
+.pts-med  { color: var(--yellow); }
+.pts-low  { color: var(--red); }
+
+.btn-del {
+  padding: 4px 9px;
+  border: none;
+  border-radius: 7px;
+  background: var(--red-light);
+  color: var(--red);
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.btn-del:hover { opacity: 1; }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-box {
+  background: var(--modal-bg);
+  border-radius: 20px;
+  padding: 28px 24px;
+  max-width: 380px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: slideUp 0.2s ease;
+  color: var(--text);
+}
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-box h3 { margin: 0 0 8px; font-size: 18px; color: var(--text); }
+.modal-box p { margin: 0 0 14px; color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+.modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+.btn-modal-cancel {
+  flex: 1; padding: 12px; border: 1.5px solid var(--border);
+  border-radius: 10px; background: var(--card); color: var(--text-muted);
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.btn-modal-confirm {
+  flex: 1; padding: 12px; border: none;
+  border-radius: 10px; background: var(--red); color: white;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.btn-modal-primary {
+  flex: 1; padding: 12px; border: none;
+  border-radius: 10px; background: var(--primary); color: white;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+}
+
+.pts-table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 14px; }
+.pts-table td { padding: 8px 4px; border-bottom: 1px solid var(--border); color: var(--text); }
+.pts-table td:last-child { text-align: right; font-weight: 700; color: var(--primary); }
+
+.onb-step { margin-bottom: 14px; padding-left: 32px; position: relative; }
+.onb-step::before {
+  content: counter(step);
+  counter-increment: step;
+  position: absolute;
+  left: 0; top: 0;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.onb-list { counter-reset: step; padding: 0; margin: 16px 0; }
+.onb-step-title { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 14px; }
+.onb-step-text { color: var(--text-muted); font-size: 13px; line-height: 1.4; margin: 0; }
+
+.perfect-week-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.85);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+.perfect-week-card {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ec4899 100%);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  color: #1e1b4b;
+  box-shadow: 0 30px 80px rgba(245,158,11,0.4);
+  animation: pop 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.perfect-week-card .pw-emoji { font-size: 64px; margin-bottom: 8px; animation: bounce 1.2s infinite; }
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.perfect-week-card h2 { color: #1e1b4b; font-size: 24px; margin: 0 0 8px; font-weight: 900; }
+.perfect-week-card p { color: rgba(30,27,75,0.85); margin: 0 0 20px; font-size: 14px; }
+.perfect-week-card .btn-pw {
+  background: #1e1b4b; color: white;
+  padding: 12px 28px; border: none; border-radius: 12px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.perfect-week-card .btn-pw:hover { opacity: 0.85; }
+
+.confetti {
+  position: fixed;
+  width: 8px; height: 14px;
+  pointer-events: none;
+  z-index: 1099;
+  animation: fall 3s linear forwards;
+}
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+.data-row { display: flex; gap: 10px; margin-top: 14px; }
+.btn-data {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.12s, color 0.12s;
+  display: block;
+}
+.btn-data:hover { background: var(--gray-light); color: var(--text); }
+
+.notif-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e1b4b;
+  color: white;
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-size: 14px;
+  max-width: 420px;
+  width: calc(100% - 32px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: slideUp 0.3s ease;
+}
+.notif-banner .nb-text { flex: 1; line-height: 1.4; }
+.notif-banner .nb-title { font-weight: 700; margin-bottom: 2px; }
+.notif-banner .nb-sub { font-size: 12px; opacity: 0.75; }
+.btn-notif-allow {
+  padding: 9px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.btn-notif-dismiss {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1f2937;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 999;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.empty-msg { color: var(--text-muted); font-size: 14px; margin: 0; }
+
+@media (max-width: 440px) {
+  body { padding: 14px 12px 80px; }
+  .hero-card { padding: 18px 18px 16px; }
+  .hero-num { font-size: 64px; letter-spacing: -2px; }
+  .hero-flame { font-size: 32px; }
+  .hero-greeting { font-size: 16px; }
+  .day-select { max-width: 130px; font-size: 12px; }
+  .goal-icon-box { width: 60px; height: 60px; font-size: 26px; }
+  .goal-name { font-size: 17px; }
+}
+
+/* ── Notification modal ── */
+.notif-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.notif-modal-box {
+  background: var(--modal-bg);
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: 100%; max-width: 360px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.notif-modal-box h3 { margin: 0 0 8px; font-size: 18px; }
+.notif-modal-box p { margin: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+.notif-time-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.notif-time-row label { font-size: 14px; font-weight: 600; color: var(--text); }
+.notif-time-input {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  width: 120px;
+  outline: none;
+  cursor: pointer;
+}
+.notif-time-input:focus { border-color: var(--primary); }
+.notif-status {
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.notif-status.ok   { background: var(--green-light); color: var(--green); }
+.notif-status.warn { background: var(--yellow-light); color: var(--yellow); }
+.notif-modal-actions { display: flex; gap: 10px; }
+.btn-notif-save {
+  flex: 1;
+  padding: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-notif-cancel {
+  padding: 12px 18px;
+  background: var(--gray-light);
+  color: var(--text);
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-notif-off {
+  width: 100%; margin-top: 10px;
+  padding: 10px;
+  background: transparent;
+  color: var(--red);
+  border: 1.5px solid var(--red);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ① Hero motivador -->
+<div class="hero-card">
+  <div class="hero-top">
+    <div class="hero-brand">
+      <span>COACH EMI</span>
+      <span class="brand-dot">·</span>
+      <span class="brand-date" id="heroBrandDate"></span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+    <button class="theme-toggle" id="bellToggle" onclick="openNotifModal()" title="Recordatorio diario">🔔</button>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">🌙</button>
+  </div>
+  </div>
+
+  <p class="hero-greeting" id="heroGreeting">Hola 👋</p>
+
+  <div class="hero-streak-wrap">
+    <div class="hero-flame" id="heroFlame">✨</div>
+    <div class="hero-num-row">
+      <span class="hero-num" id="heroNum">0</span>
+      <span class="hero-unit">días</span>
+    </div>
+    <div class="hero-tagline" id="heroTagline">Hoy empieza algo bueno</div>
+  </div>
+
+  <div class="hero-week">
+    <div class="hero-week-bar"><div class="hwb-fill" id="hwbFill" style="width:0%"></div></div>
+    <div class="hero-week-text">
+      <span id="hwbText">0 / 18 pts esta semana</span>
+      <span class="hwb-pct" id="hwbPct">0%</span>
+    </div>
+  </div>
+</div>
+
+<!-- ② Hoy toca — tarjeta inteligente -->
+<div class="card card-goal" id="goalCard">
+  <div class="goal-head">
+    <h2>🎯 Hoy toca</h2>
+    <span class="goal-tag" id="goalTag">PRIORITARIO</span>
+  </div>
+  <div class="goal-main">
+    <div class="goal-icon-box" id="goalIconBox">
+      <span id="goalIcon">🚴</span>
+      <span class="goal-pts-mini" id="goalPts">+3 pts</span>
+    </div>
+    <div class="goal-info">
+      <p class="goal-name" id="goalName">Cargando...</p>
+      <p class="goal-reason" id="goalReason"></p>
+    </div>
+  </div>
+  <div class="goal-alts" id="goalAlts" style="display:none">
+    <div class="goal-alts-label">o si no puedes:</div>
+    <div class="goal-alt-list" id="goalAltList"></div>
+  </div>
+</div>
+
+<!-- ③ Alerta días sin registrar -->
+<div id="missingDaysAlert"></div>
+
+<!-- ④ Formulario -->
+<div class="card" id="registerCard">
+  <div class="form-header">
+    <h2 id="formTitle">📝 ¿Cómo fue ayer?</h2>
+    <select id="daySelect" class="day-select" onchange="onDayChange()"></select>
+  </div>
+  <div id="savedNotice"></div>
+  <div class="check-group" id="checkGroup">
+    <label class="check-label"><input type="checkbox" id="bike"> 🚴 Bici <span class="pts-badge">+3 pts</span></label>
+    <label class="check-label"><input type="checkbox" id="trainer"> 🏋️ Fuerza con entrenador <span class="pts-badge">+4 pts</span></label>
+    <label class="check-label"><input type="checkbox" id="home"> 💪 Fuerza en casa <span class="pts-badge">+2 pts</span></label>
+    <label class="check-label"><input type="checkbox" id="steps"> 👣 7000 pasos <span class="pts-badge">+2 pts</span></label>
+    <label class="check-label"><input type="checkbox" id="walk"> 🚶 Caminata 20 min <span class="pts-badge">+1 pt</span></label>
+    <label class="check-label"><input type="checkbox" id="rest"> 😌 Descanso consciente <span class="pts-badge">libre</span></label>
+    <label class="check-label bad-label"><input type="checkbox" id="bad" onchange="onBadChange()"> 😵 Día malo / bloqueo <span class="pts-badge pts-badge-bad">registrar</span></label>
+  </div>
+  <div id="badDayMsg" class="bad-day-msg"></div>
+  <button class="btn-save" id="saveBtn" onclick="saveDay()">✅ Guardar</button>
+</div>
+
+<!-- ⑤ Semana actual -->
+<div class="card">
+  <div class="sec-head">
+    <h2>🏆 Semana actual <button class="info-btn" onclick="showPointsModal()" title="Cómo funciona">i</button></h2>
+    <button class="btn-share" onclick="shareWeek()">📤 Compartir</button>
+  </div>
+  <div id="weekCalendar" class="week-calendar"></div>
+  <div class="stat-grid">
+    <div class="stat-box" id="statBike"><div class="s-val" id="bikeVal">0/2</div><div class="s-lbl">🚴 Bici</div></div>
+    <div class="stat-box" id="statTrainer"><div class="s-val" id="trainerVal">—</div><div class="s-lbl">🏋️ Entrenador</div></div>
+    <div class="stat-box" id="statHome"><div class="s-val" id="homeVal">0/1</div><div class="s-lbl">💪 En casa</div></div>
+  </div>
+  <div class="stats-legend">
+    <span><span class="legend-dot" style="background:var(--green)"></span>Completado</span>
+    <span><span class="legend-dot" style="background:var(--yellow)"></span>En progreso</span>
+    <span><span class="legend-dot" style="background:var(--border)"></span>Sin datos</span>
+  </div>
+  <div class="progress"><div class="progress-bar" id="bar" style="width:0%"></div></div>
+  <div class="progress-label">
+    <span id="ptsLabel">0 puntos esta semana</span>
+    <span>Meta: 18 pts 🏆</span>
+  </div>
+</div>
+
+<!-- ⑥ Progreso total -->
+<div class="card">
+  <h2 id="statsTitle">📊 Progreso total</h2>
+  <div class="stats-row" id="statsRow"><p class="empty-msg">Sin datos aún.</p></div>
+</div>
+
+<!-- ⑦ Histórico -->
+<div class="card">
+  <div class="history-header">
+    <h2>📜 Histórico</h2>
+    <button class="btn-toggle" id="toggleBtn" onclick="toggleHistory()" style="display:none">Ver todo</button>
+  </div>
+  <div id="historyList"></div>
+  <div class="data-row">
+    <button class="btn-data" onclick="exportData()">⬇️ Exportar JSON</button>
+    <label class="btn-data">
+      ⬆️ Importar JSON
+      <input type="file" accept=".json" onchange="importData(event)" style="display:none">
+    </label>
+  </div>
+</div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const ACTS = [
+  { key:'bike',    emoji:'🚴', name:'Bici',         pts:3 },
+  { key:'trainer', emoji:'🏋️',name:'Entrenador',    pts:4 },
+  { key:'home',    emoji:'💪', name:'Fuerza casa',   pts:2 },
+  { key:'steps',   emoji:'👣', name:'7k pasos',      pts:2 },
+  { key:'walk',    emoji:'🚶', name:'Caminata',      pts:1 },
+  { key:'rest',    emoji:'😌', name:'Descanso',      pts:0 },
+];
+const WEEK_DAYS = ['L','M','X','J','V','S','D'];
+
+const BAD_DAY_PHRASES = [
+  `Hoy no necesitas motivación. Necesitas moverte.`,
+  `Tu sofá está haciendo lobby en tu contra.`,
+  `Cinco minutos de entrenamiento siguen siendo entrenamiento.`,
+  `Hazlo sin ganas, pero hazlo.`,
+  `Tu excusa de hoy ya la escuchamos ayer.`,
+  `No estás bloqueado, estás posponiendo.`,
+  `Empieza mal, pero empieza.`,
+  `Poco siempre gana a nada.`,
+  `Hoy no toca perfecto. Toca hecho.`,
+  `La disciplina entra cuando la motivación se va de fiesta.`,
+  `Tu yo de mañana está cansado de tus "mañana".`,
+  `Si ya abriste la app, ya sabes lo que toca.`,
+  `No entrenar también cansa, pero encima da rabia.`,
+  `Tu pereza tiene mucha autoestima.`,
+  `No tienes que querer. Solo tienes que empezar.`,
+  `Haz una serie. Luego improvisamos dignidad.`,
+  `El bloqueo se rompe sudando.`,
+  `Hoy vienes arrastrándote. Nos sirve.`,
+  `Entrenar triste sigue contando.`,
+  `Entrenar enfadado también cuenta. A veces más.`,
+  `Tu cama no te está ayudando a cumplir objetivos.`,
+  `Si no puedes con todo, haz algo.`,
+  `Algo pequeño hoy evita una gran culpa mañana.`,
+  `No estás hecho polvo. Estás negociando.`,
+  `La desgana habla mucho para no haber corrido ni diez minutos.`,
+  `Hoy tu meta es presentarte.`,
+  `Un mal entrenamiento sigue siendo bastante decente.`,
+  `Las ganas son opcionales. El progreso no.`,
+  `No te pedimos magia. Te pedimos movimiento.`,
+  `Hazlo aunque sea por llevarle la contraria a tu cabeza.`,
+  `Tu excusa ya calentó más que tú.`,
+  `Entrena aunque sea con energía de mueble viejo.`,
+  `El cuerpo protesta al principio. Luego entra en razón.`,
+  `Hoy basta con no desaparecer.`,
+  `No es un día ideal. Perfecto, tampoco eres un anuncio.`,
+  `Muévete. El drama luego.`,
+  `La constancia también llega despeinada.`,
+  `Entrena como puedas, no como imaginabas.`,
+  `Si no sale bonito, que salga.`,
+  `La sesión de hoy puede ser mediocre. Tu compromiso no.`,
+  `Nadie se arrepiente del entrenamiento después.`,
+  `Sí te arrepientes del "bah, mañana".`,
+  `Una repetición más inteligente que una excusa.`,
+  `Tu motivación está offline. Tu cuerpo sigue aquí.`,
+  `No te hace falta fe. Te hace falta empezar.`,
+  `Hoy toca cumplir, no inspirarse.`,
+  `El plan no era sufrir. Pero tampoco quedarse tumbado.`,
+  `Hazlo por salud, por orgullo o por puro rencor. Sirve igual.`,
+  `Tu peor sesión sigue humillando a no hacer nada.`,
+  `Estás a una decisión de sentirte mejor.`,
+  `No estás cansado, estás vencido por el sillón.`,
+  `Sal de tu cabeza y entra en la sesión.`,
+  `No todo entrenamiento cambia el cuerpo. Todos cambian el hábito.`,
+  `Hoy vienes sin chispa. Usa fricción.`,
+  `Una caminata también cuenta. Deja de complicarlo.`,
+  `Tu cuerpo no necesita una obra maestra. Necesita uso.`,
+  `A veces entrenar es terapia con repeticiones.`,
+  `No canceles por cómo te sientes. Entrena por eso.`,
+  `Si el día está torcido, muévete recto.`,
+  `El calentamiento es ese puente entre la queja y el respeto propio.`,
+  `Tu cabeza te miente con mucha seguridad.`,
+  `Hazlo bajito, lento, torpe… pero hazlo.`,
+  `Hoy no ganas músculo. Hoy ganas inercia.`,
+  `El progreso ama a la gente pesada.`,
+  `Preséntate aunque vengas roto por dentro y rígido por fuera.`,
+  `La pereza no merece tener siempre la última palabra.`,
+  `Una sesión corta salva una semana larga.`,
+  `Estar bloqueado no te exime, te delata.`,
+  `No eres un árbol. Puedes moverte.`,
+  `Si esperas a tener ganas, te jubilarás estirando.`,
+  `El primer paso tiene muy poca estética, pero mucha utilidad.`,
+  `Tú no necesitas otro vídeo motivacional. Necesitas empezar.`,
+  `Haz una parte. Tu cerebro es malísimo calculando lo bien que te sentirás luego.`,
+  `Tu cama es cómoda, no milagrosa.`,
+  `Hoy no te pedimos fuego. Con una chispa vale.`,
+  `Tu yo futuro preferiría hechos antes que discursos.`,
+  `La autodisciplina no siempre entra heroica. A veces entra bufando.`,
+  `A veces la victoria es solo no escaquearse.`,
+  `Tu energía no es brillante. Tu excusa tampoco.`,
+  `Moverte hoy ya es una forma de respeto.`,
+  `El bloqueo no se resuelve pensando más.`,
+  `Hazlo por la química cerebral y por callar a la culpa.`,
+  `No viniste a esta app a coleccionar excusas.`,
+  `Tu versión más fuerte no nació descansando de más.`,
+  `Lo difícil no es entrenar. Es dejar de negociar.`,
+  `Hoy toca una sesión con cara de lunes y resultados de adulto funcional.`,
+  `Empieza con cero glamour.`,
+  `Tu pereza está intentando sobrevivir. No la ayudes.`,
+  `Si no puedes correr, anda. Si no puedes andar, empieza.`,
+  `El movimiento también cuenta cuando no ilusiona.`,
+  `El orgullo se entrena cumpliendo días feos.`,
+  `Tu ánimo no manda tanto como cree.`,
+  `Hoy no hace falta intensidad. Hace falta presencia.`,
+  `Venga, que ni tu excusa se cree ya.`,
+  `Si solo haces el calentamiento, ya rompiste el bloqueo.`,
+  `Cada día que cumples le baja el volumen a la excusa.`,
+  `El cuerpo entiende mejor los actos que las intenciones.`,
+  `Muévete antes de que tu cabeza convoque otra reunión inútil.`,
+  `No necesitas estar listo. Necesitas estar en marcha.`,
+  `La motivación es una diva. La rutina, una profesional.`,
+  `Hoy tu plan es muy simple: no desaparecer.`,
+  `Hazlo incluso con actitud de funeral.`,
+  `A veces el éxito tiene forma de entrenamiento regulero.`,
+  `Tu desgana no paga tus objetivos.`,
+  `No estás fallando; estás tardando demasiado en empezar.`,
+  `Tu mente quiere comodidad. Tu cuerpo necesita estímulo.`,
+  `Entrenar hoy es votar por tu versión menos cansina.`,
+  `No esperes una señal. Esta es.`,
+  `La fricción inicial dura menos que la culpa.`,
+  `Una serie hoy vale más que diez promesas.`,
+  `Tu hábito se construye en los días absurdos.`,
+  `Hazlo por orgullo silencioso.`,
+  `Aunque entrenes con cara de pocos amigos, cuenta igual.`,
+  `Hoy basta con cumplir sin épica.`,
+  `El día no coopera. Tú sí puedes.`,
+  `La energía aparece a mitad de camino, no al principio.`,
+  `Entrena primero. Cuestiona tu existencia después.`,
+  `El cuerpo mejora cuando dejas de tratarlo como decoración.`,
+  `No necesitas confianza. Necesitas repetición.`,
+  `Hasta un entrenamiento mediocre ordena la cabeza.`,
+  `Hoy no eres un guerrero. Eres alguien con zapatillas. Es suficiente.`,
+  `Tus excusas tienen más cardio que tú.`,
+  `Empieza antes de que cambies de opinión otra vez.`,
+  `Te prometemos cero ganas al principio y mejores sensaciones al final.`,
+  `Si vas a pensar demasiado, al menos hazlo caminando.`,
+  `Tu pereza está muy cómoda. Incomódala.`,
+  `Hoy toca sudar la tontería.`,
+  `El bloqueo pierde fuerza cuando tú ganas ritmo.`,
+  `Nada cambia si tú no te levantas.`,
+  `Hazlo por el plot twist.`,
+  `Un cuerpo fuerte se fabrica en días débiles.`,
+  `Hoy no vienes inspirado. Vienes comprometido.`,
+  `No conviertas un mal rato en una mala semana.`,
+  `Cada sesión cuenta, incluso la fea.`,
+  `Tu esfuerzo no necesita ser bonito para servir.`,
+  `La excusa de hoy tiene olor a reciclada.`,
+  `Empieza con vergüenza si hace falta.`,
+  `Entrenar desmotivado es un talento infravalorado.`,
+  `Haz algo que tu yo de mañana no tenga que perdonarte.`,
+  `Te sientes bloqueado, no inmovilizado.`,
+  `Tu cama nunca te puso en forma. Qué sorpresa.`,
+  `Una sesión corta sigue siendo una victoria larga.`,
+  `Hazlo sin música épica. El mérito será más puro.`,
+  `Hoy te mueves por higiene mental.`,
+  `No todo se arregla entrenando, pero esto ayuda bastante.`,
+  `Si el día pesa, mueve el cuerpo y reparte carga.`,
+  `La costumbre se construye cumpliendo cuando apetece cero.`,
+  `Hazlo aunque sea por no volver a empezar desde cero.`,
+  `No necesitas otro lunes. Necesitas este rato.`,
+  `Tu progreso odia las pausas teatrales.`,
+  `Basta de meditar la desgracia. Activa las piernas.`,
+  `La mente dramatiza. El cuerpo trabaja.`,
+  `Hoy tienes permiso para hacerlo simple.`,
+  `El objetivo mínimo también cuenta.`,
+  `Ven cansado, torcido y de mala leche. Pero ven.`,
+  `Una repetición más es una negociación menos.`,
+  `No tienes que dar el 100%. Da presencia.`,
+  `La perfección es una excusa con buena prensa.`,
+  `Tu rutina no necesita emoción; necesita continuidad.`,
+  `Hazlo por las endorfinas o por despecho. Ambas son combustibles.`,
+  `El entrenamiento de hoy no tiene que impresionarte. Solo tiene que ocurrir.`,
+  `La disciplina empieza donde termina el "no me apetece".`,
+  `No confundas bloqueo con comodidad.`,
+  `Tú no eres tu desgana.`,
+  `Empieza torpe. Mejora en movimiento.`,
+  `Nada más peligroso que una excusa bien argumentada.`,
+  `El sofá celebra cada vez que abandonas. Qué feo darle esa alegría.`,
+  `Tu mejor versión no vive en borradores.`,
+  `Hoy no sumas récords. Sumas respeto propio.`,
+  `Entrenar mal sigue siendo entrenar bien comparado con nada.`,
+  `Haz lo justo para no romper la cadena.`,
+  `Tu energía no aparece por arte de magia; aparece moviéndote.`,
+  `Lo peor suelen ser los primeros cinco minutos. Sobrevive a eso.`,
+  `Una rutina estable vale más que una motivación histérica.`,
+  `Si no te apetece, perfecto: hoy entrenas por carácter.`,
+  `El compromiso real tiene pinta de día normal y pocas ganas.`,
+  `No hace falta ir fuerte. Hace falta ir.`,
+  `Tu cabeza necesita menos debate y más circulación.`,
+  `Bloqueado no significa fuera de servicio.`,
+  `Hazlo como quien se lava los dientes: sin discutir.`,
+  `Hoy solo queremos verte en movimiento.`,
+  `No te rindas antes del calentamiento, que queda fatal.`,
+  `Hay días de récord y días de responsabilidad. Este es de responsabilidad.`,
+  `Cada vez que cumples cansado, sube tu nivel real.`,
+  `Tu desgana no es una orden.`,
+  `La motivación es caprichosa. Tú intenta no serlo.`,
+  `Hazlo por rutina, por rabia o por salud mental. Nos da igual, pero hazlo.`,
+  `Si hoy estás al 40%, entrena al 40%.`,
+  `Seguir flojo también es seguir.`,
+  `Tu sesión no necesita aplausos. Necesita inicio.`,
+  `La épica está sobrevalorada; la constancia no.`,
+  `Hoy tu único trabajo es no esfumarte.`,
+  `Entrena aunque sea para sentirte mínimamente orgulloso dentro de una hora.`,
+  `A veces la mejor decisión del día empieza con "bah, voy".`,
+  `No te bloquees tanto: eres una persona, no una app colgada.`,
+  `El cuerpo agradece lo que la mente sabotea.`,
+  `Muévete hoy y deja de deberte cosas.`,
+  `Vamos: feo, corto, cansado o enfadado. Pero hecho.`,
+];
+
+function pickBadDayPhrase() {
+  return BAD_DAY_PHRASES[Math.floor(Math.random() * BAD_DAY_PHRASES.length)];
+}
+
+const STREAK_PHRASES = {
+  3: [
+    `Tres días seguidos y ya empiezas a parecer una decisión excelente.`,
+    `Cuidado: esto ya no es impulso, esto tiene pinta de hábito.`,
+    `Tres días. Nada mal para alguien que antes negociaba con una manta.`,
+    `Tu racha acaba de nacer y ya viene con ego.`,
+    `Esto empieza pequeño, sí. Como casi todas las cosas peligrosamente buenas.`,
+    `Tres días seguidos: la excusa ya nota presión.`,
+    `Tu disciplina acaba de abrir una cuenta y ya tiene movimiento.`,
+    `No es una casualidad. Es una declaración de intenciones con agujetas.`,
+    `Llevas tres días cumpliendo. Eso ya molesta a tu caos interno.`,
+    `Esto aún es una chispa, pero vaya chispa.`,
+    `Tu hábito ha pasado de idea simpática a sospecha seria.`,
+    `Tres días y ya se te nota un preocupante buen criterio.`,
+    `Estás a nada de convertir esto en personalidad.`,
+    `La pereza ya ha entendido que aquí hay competencia.`,
+    `Tres días seguidos: ya no es suerte, ya es conducta.`,
+    `Esto no impresiona por largo. Impresiona por empezar de verdad.`,
+    `Tu versión fuerte está calentando.`,
+    `Qué rápido has pasado de "a ver si" a "mira, pues sí".`,
+    `Tres días son suficientes para que la excusa empiece a tartamudear.`,
+    `Tu racha aún es pequeña, pero trae energía de golpe de estado.`,
+    `Estás construyendo algo. Y encima sin hacer tanto teatro.`,
+    `Tres días cumpliendo y ya parece que tu vida tiene editorial.`,
+    `Tu compromiso acaba de salir del borrador.`,
+    `Esto huele a costumbre peligrosa para tu antiguo yo.`,
+    `Tres días seguidos: ya estás más cerca de ser esa persona.`,
+    `La motivación vino, hizo su trabajo y tú encima te quedaste.`,
+    `Tu racha es joven, pero muy prometedora y bastante soberbia.`,
+    `Esto acaba de empezar y ya cae sorprendentemente bien.`,
+    `Hay algo obscenamente bonito en cumplir tres veces seguidas.`,
+    `Tres días después y ya pareces menos teoría y más evidencia.`,
+    `Estás empezando a tener antecedentes de disciplina.`,
+    `Tu hábito ya ha enviado una primera señal diplomática.`,
+    `Tres días y ya hay estructura donde antes había excusas creativas.`,
+    `Esto todavía no es leyenda. Pero ya es prólogo serio.`,
+    `Tu constancia acaba de asomar la cabeza y tiene muy buena presencia.`,
+  ],
+  7: [
+    `Siete días seguidos y ya no pareces motivado: pareces organizado.`,
+    `Una semana cumpliendo. Esto ya entra en territorio respetable.`,
+    `Siete días y tu caos empieza a perder representación parlamentaria.`,
+    `Tu disciplina ya ha sobrevivido a una semana completa. Qué escándalo.`,
+    `Una semana seguida entrenando y ya cambió el tono de la conversación interna.`,
+    `Esto ya no es una buena intención: es un patrón con modales.`,
+    `Siete días cumpliendo y tu calendario parece una amenaza seria.`,
+    `Lo de esta semana ya es una pequeña obra de gobierno personal.`,
+    `Una semana así y ya cuesta llamarlo "rachita".`,
+    `Tu hábito ha superado la fase decorativa.`,
+    `Siete días seguidos: ya empieza a parecer que vas en serio.`,
+    `Esto no fue suerte. Fue repetición con bastante clase.`,
+    `Tu constancia ha durado más que muchas promesas brillantes.`,
+    `Una semana y ya has puesto orden donde antes había opiniones.`,
+    `Siete días después, la excusa ya no entra sin cita.`,
+    `Esto empieza a tener peso moral y gemelos.`,
+    `Tu disciplina ha pasado de invitada a residente.`,
+    `Una semana seguida y ya te estás volviendo fiable para ti mismo.`,
+    `Siete días. La motivación puede irse; aquí ya queda estructura.`,
+    `Has conseguido lo más elegante de todo: repetir.`,
+    `Una semana así y ya se nota que alguien ha tomado el control.`,
+    `Lo tuyo ya no es entusiasmo. Es continuidad con muy buena educación.`,
+    `Siete días seguidos: esto empieza a tener reputación propia.`,
+    `Tu hábito ya no parece una posibilidad. Parece un sistema.`,
+    `Una semana cumpliendo y el abandono ya queda feísimo.`,
+    `La constancia en tus manos parece una cosa peligrosamente razonable.`,
+    `Siete días bien puestos y ya cambia hasta cómo te miras.`,
+    `Una semana entera. Ya no eres promesa; eres precedente.`,
+    `Tu racha tiene una semana y ya camina con demasiada seguridad.`,
+    `Esto ha dejado de ser una prueba. Es una tendencia.`,
+    `Siete días seguidos: tu yo antiguo empieza a quedarse sin argumentos.`,
+    `Tu compromiso está adquiriendo esa bonita forma de lo creíble.`,
+    `Una semana de disciplina y ya huele a identidad.`,
+    `Qué rápido has convertido una idea en una pequeña institución.`,
+    `Siete días seguidos y ya le estás cayendo mal a la procrastinación.`,
+  ],
+  15: [
+    `Quince días seguidos y ya no estás intentando cambiar: estás cambiando.`,
+    `Esto ya no es una racha simpática. Esto tiene intención estructural.`,
+    `Quince días cumpliendo y ya da pudor seguir llamándolo casualidad.`,
+    `Tu disciplina empieza a tener más continuidad que muchas relaciones adultas.`,
+    `Quince días después, tu hábito ya sabe dónde vive.`,
+    `Esto empieza a parecer una versión mejor redactada de ti.`,
+    `Tu constancia ya no pide permiso. Entra y se sienta.`,
+    `Quince días son suficientes para que el carácter empiece a hablar.`,
+    `Estás construyendo una costumbre con modales de imperio.`,
+    `Esto ya no es entusiasmo: es criterio repetido.`,
+    `Quince días seguidos y tu antigua desgana ya parece material de archivo.`,
+    `Tu racha ha cruzado la frontera entre impulso e identidad.`,
+    `Aquí ya no hay magia. Hay método con autoestima.`,
+    `Quince días bien puestos y hasta el espejo empieza a sospechar cosas buenas.`,
+    `Tu hábito se está volviendo una presencia oficial.`,
+    `Esto empieza a tener la consistencia de algo muy serio y un poco arrogante.`,
+    `Quince días seguidos: ya estás fabricando credibilidad.`,
+    `Tu compromiso ha dejado de ser una idea inspiradora. Ahora es logística.`,
+    `Esto ya merece menos aplauso y más respeto.`,
+    `Quince días cumpliendo y el abandono empieza a parecer un chiste flojo.`,
+    `Hay algo gloriosamente adulto en repetir así.`,
+    `Tu racha ya no empuja. Empieza a arrastrar.`,
+    `Quince días seguidos y el hábito ya tiene columna vertebral.`,
+    `Esto empieza a parecer una filosofía, pero con cuádriceps.`,
+    `Tu constancia está alcanzando un punto deliciosamente incómodo para tus excusas.`,
+    `Quince días: ya no eres intención, eres comportamiento.`,
+    `Esto no es solo fitness. Es arquitectura interna.`,
+    `Tu disciplina está empezando a tener tono de voz propio.`,
+    `Quince días seguidos y ya se nota que alguien mandó callar al caos.`,
+    `Tu hábito empieza a tener el peso elegante de una decisión seria.`,
+    `Esto ya no es "voy viendo". Esto es "voy".`,
+    `Quince días cumpliendo: tu versión fuerte ya tiene dirección postal.`,
+    `Estás haciendo de la repetición una forma muy fina de autoridad.`,
+    `Quince días seguidos y la excusa ya necesita abogado.`,
+    `Tu racha está dejando de ser emocionante para empezar a ser sólida.`,
+  ],
+  30: [
+    `Treinta días seguidos y esto ya no es una racha: es identidad oficial.`,
+    `Un mes entero cumpliendo. Esto ya tiene valor arquitectónico.`,
+    `Treinta días y tu disciplina empieza a parecer un rasgo hereditario.`,
+    `Esto no se sostiene por ganas; se sostiene por carácter.`,
+    `Un mes seguido y ya cuesta recordar la versión que dudaba tanto.`,
+    `Tu hábito ha pasado de proyecto a infraestructura.`,
+    `Treinta días seguidos: esto ya se puede enseñar como prueba.`,
+    `La constancia te está quedando absurdamente bien.`,
+    `Un mes así y ya estás redactando una nueva versión de ti sin metáforas.`,
+    `Esto empieza a ser menos motivación y más gobierno interno.`,
+    `Treinta días después, tu compromiso ya no necesita presentación.`,
+    `Tu racha ha entrado en terreno donde el respeto sustituye al entusiasmo.`,
+    `Un mes cumpliendo y la excusa ha perdido representación institucional.`,
+    `Esto ya no parece algo que haces. Parece algo que eres.`,
+    `Tu disciplina tiene un mes y ya entra en la sala con autoridad.`,
+    `Treinta días seguidos: esto tiene la elegancia brutal de lo repetido.`,
+    `Lo de un mes ya no se celebra solo. Se contempla.`,
+    `Tu hábito se ha vuelto demasiado real para seguir discutiéndolo.`,
+    `Treinta días bien puestos y el caos ya va pidiendo instrucciones.`,
+    `Esto no es una buena racha. Es un cambio de régimen.`,
+    `Un mes seguido y tu versión fuerte ya paga alquiler aquí.`,
+    `La repetición contigo ha alcanzado una calidad escandalosa.`,
+    `Treinta días: ya no estás construyendo impulso; estás consolidando territorio.`,
+    `Esto empieza a tener textura de legado pequeño, serio y muy efectivo.`,
+    `Un mes entero cumpliendo y ya no pareces motivado, pareces inevitable.`,
+    `Tu disciplina ha cruzado a esa zona preciosa donde ya no depende del humor.`,
+    `Treinta días seguidos: ya has domesticado una parte muy salvaje del día a día.`,
+    `Esto ya no es admirable. Empieza a ser intimidante.`,
+    `Tu racha ha cogido una densidad moral bastante espectacular.`,
+    `Un mes así y hasta tus límites parecen mejor educados.`,
+    `Treinta días cumpliendo: ya no prometes; administras resultados.`,
+    `Esto ya tiene más forma de sistema que de reto.`,
+    `Tu hábito ha dejado de ser simpático. Ahora es imponente.`,
+    `Un mes seguido y tu identidad nueva ya no parece nueva.`,
+    `Treinta días de esto y la palabra "constancia" empieza a quedarse corta.`,
+  ],
+  50: [
+    `Cincuenta días seguidos y ya no entrenas: gobiernas.`,
+    `Esto ya no es una racha; es un régimen estable con buenas piernas.`,
+    `Cincuenta días cumpliendo y tu disciplina empieza a tener jurisprudencia.`,
+    `Tu hábito ya no ocupa espacio: establece orden.`,
+    `Lo de cincuenta días tiene una violencia conceptual preciosa.`,
+    `Esto no es continuidad. Esto es presencia dominante.`,
+    `Cincuenta días seguidos y ya das esa paz inquietante de la gente seria.`,
+    `Tu constancia tiene el aplomo de una institución antigua y muy eficaz.`,
+    `Esto ya roza lo legendario sin necesidad de hacer ruido.`,
+    `Cincuenta días después, la excusa entra aquí como quien pide perdón.`,
+    `Tu compromiso ha alcanzado un nivel que merece mobiliario noble.`,
+    `Esto empieza a parecer destino redactado con sudor.`,
+    `Cincuenta días y la disciplina ya casi podría llevar tu apellido.`,
+    `Tu hábito tiene más estabilidad que muchas economías.`,
+    `Esto no impresiona solo por durar. Impresiona por insistir tan bien.`,
+    `Cincuenta días seguidos y ya no se te puede llamar irregular sin faltar a la verdad.`,
+    `Tu constancia empieza a tener esa belleza rara de las cosas inevitables.`,
+    `Esto ya no es esfuerzo: es doctrina aplicada.`,
+    `Cincuenta días y tu versión fuerte ha dejado de ser visita. Ahora vive aquí.`,
+    `Tu racha camina con la insolencia refinada de lo que funciona.`,
+    `Esto ya no inspira. Ordena.`,
+    `Cincuenta días cumpliendo y el abandono se ha vuelto socialmente inaceptable.`,
+    `Tu hábito tiene la calma de quien gana por acumulación.`,
+    `Esto parece diseñado por una mente brillante con muy poca paciencia para fallarse.`,
+    `Cincuenta días seguidos y ya estás por encima del debate.`,
+    `Tu disciplina se ha vuelto una forma de prestigio personal.`,
+    `Esto ya tiene escudo, himno y política exterior.`,
+    `Cincuenta días bien puestos y la mediocridad ya cruza la calle al verte.`,
+    `Tu racha tiene un nivel de consistencia que casi ofende.`,
+    `Esto ha dejado de ser admirable. Ahora es referencia.`,
+    `Cincuenta días y ya no sigues el plan: eres el plan.`,
+    `Tu constancia tiene ese tono insoportable de las cosas magníficamente hechas.`,
+    `Esto ya no es fitness. Es hegemonía privada.`,
+    `Cincuenta días seguidos y el tiempo está claramente de tu parte.`,
+    `Tu hábito ha alcanzado una seriedad deliciosamente excesiva.`,
+  ],
+  100: [
+    `Cien días seguidos y ya no tienes una racha: tienes un reinado.`,
+    `Esto no se celebra; se estudia.`,
+    `Cien días cumpliendo y la disciplina te ha nombrado embajador.`,
+    `Tu hábito ya no es un hábito: es una civilización funcional.`,
+    `Cien días así y hasta el calendario se te cuadra solo.`,
+    `Esto ya no es constancia. Esto es una cosmovisión con zapatillas.`,
+    `Cien días seguidos y has entrado en esa zona donde la palabra "compromiso" se queda humilde.`,
+    `Tu disciplina tiene ahora el peso específico de una ley natural.`,
+    `Esto ya no parece una persona entrenando. Parece una doctrina bien administrada.`,
+    `Cien días y tu versión fuerte ya no es aspiración: es gobierno legítimo.`,
+    `Lo tuyo ha cruzado la frontera entre admirable y francamente mitológico.`,
+    `Cien días seguidos: ya no eres ejemplo, eres argumento.`,
+    `Tu hábito tiene una escala que roza lo imperial.`,
+    `Esto ya no es orgullo sano. Es patrimonio intangible.`,
+    `Cien días cumpliendo y la excusa ha sido oficialmente expulsada del territorio.`,
+    `Tu constancia ha alcanzado ese nivel en que el aplauso llega tarde.`,
+    `Esto ya no es una victoria diaria. Es una forma de soberanía.`,
+    `Cien días y el abandono contigo empieza a parecer ciencia ficción.`,
+    `Tu disciplina tiene la serenidad de lo absolutamente irreversible.`,
+    `Esto ya parece un documental narrado con voz grave y presupuesto alto.`,
+    `Cien días seguidos y el caos ha firmado la rendición.`,
+    `Tu hábito ya no necesita motivación; necesita un marco legal.`,
+    `Esto no es una racha larga. Es una demostración de especie.`,
+    `Cien días y tu identidad se ha blindado de una manera elegantemente salvaje.`,
+    `No estás manteniendo una racha. Estás instaurando una dinastía.`,
+  ],
+};
+
+function streakIcon(s) {
+  if(s === 0)   return '✨';
+  if(s <= 2)    return '🌱';
+  if(s <= 6)    return '⚡';
+  if(s <= 14)   return '🔥';
+  if(s <= 29)   return '🚀';
+  if(s <= 49)   return '💎';
+  if(s <= 99)   return '🌟';
+  return '👑';
+}
+
+function streakTagline(s) {
+  if(s === 0) return 'Hoy empieza algo bueno';
+  if(s === 1) return 'Has roto la inercia';
+  if(s === 2) return 'Ya no es casualidad';
+  let tier;
+  if(s >= 100)     tier = 100;
+  else if(s >= 50) tier = 50;
+  else if(s >= 30) tier = 30;
+  else if(s >= 15) tier = 15;
+  else if(s >= 7)  tier = 7;
+  else             tier = 3;
+  const arr = STREAK_PHRASES[tier];
+  // Seed estable: misma frase todo el día, cambia al pasar día o cambiar streak
+  const t = new Date();
+  const seed = t.getFullYear() * 10000 + (t.getMonth()+1) * 100 + t.getDate() + s * 7;
+  return arr[seed % arr.length];
+}
+
+let showAll = false;
+
+function getData()   { return JSON.parse(localStorage.getItem('coachData') || '[]'); }
+function saveData(d) { localStorage.setItem('coachData', JSON.stringify(d)); }
+
+function toLocal(s)    { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function p(n)          { return String(n).padStart(2,'0'); }
+function isoOf(d)      { return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function todayISO()    { return isoOf(new Date()); }
+function daysAgoISO(n) { const d=new Date(); d.setDate(d.getDate()-n); return isoOf(d); }
+function todayDow()    { return new Date().getDay(); }
+function mondayISO() {
+  const now  = new Date();
+  const diff = (now.getDay() + 6) % 7;
+  return isoOf(new Date(now.getFullYear(), now.getMonth(), now.getDate() - diff));
+}
+
+function fmtDate(s) {
+  const d = toLocal(s);
+  const days   = ['dom','lun','mar','mié','jue','vie','sáb'];
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return { main: `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`, year: d.getFullYear() };
+}
+
+function weekData() {
+  const monday = toLocal(mondayISO());
+  return getData().filter(x => toLocal(x.date) >= monday);
+}
+
+function calcPoints(e) {
+  let pts = 0;
+  if(e.bike)    pts += 3;
+  if(e.trainer) pts += 4;
+  if(e.home)    pts += 2;
+  if(e.steps)   pts += 2;
+  if(e.walk)    pts += 1;
+  if(!e.bad)    pts += 1;
+  return pts;
+}
+
+function ptsClass(pts, bad) {
+  if(bad)      return 'pts-low';
+  if(pts >= 7) return 'pts-high';
+  if(pts >= 4) return 'pts-med';
+  return 'pts-low';
+}
+function dotClass(pts, bad) {
+  if(bad)      return 'dot-bad';
+  if(pts >= 7) return 'dot-high';
+  if(pts >= 4) return 'dot-med';
+  return 'dot-low';
+}
+
+function calcStreak(data) {
+  if(!data.length) return 0;
+  const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date));
+  let streak = 0;
+  let cursor = new Date(); cursor.setHours(0,0,0,0);
+  for(const e of sorted) {
+    const ed = toLocal(e.date); ed.setHours(0,0,0,0);
+    const gap = Math.round((cursor - ed) / 86400000);
+    if(gap === 0) continue;
+    if(gap === 1 && (e.points > 0 || e.bad)) { streak++; cursor = ed; }
+    else break;
+  }
+  return streak;
+}
+
+function bestStreak(data) {
+  if(!data.length) return 0;
+  const sorted = [...data].sort((a,b) => a.date.localeCompare(b.date));
+  let best = 0, cur = 0, prev = null;
+  for(const e of sorted) {
+    const valid = e.points > 0 || e.bad;
+    if(valid) {
+      if(prev) {
+        const gap = Math.round((toLocal(e.date) - toLocal(prev)) / 86400000);
+        cur = gap === 1 ? cur + 1 : 1;
+      } else { cur = 1; }
+      best = Math.max(best, cur);
+      prev = e.date;
+    } else { cur = 0; prev = null; }
+  }
+  return best;
+}
+
+function getSelectableDays() {
+  const data = getData();
+  const labels = ['Ayer', 'Anteayer', 'Hace 3 días'];
+  return [1,2,3].map((n, i) => {
+    const iso = daysAgoISO(n);
+    return { iso, label: labels[i], fmt: fmtDate(iso).main, already: data.some(x => x.date === iso) };
+  });
+}
+function populateDaySelect() {
+  const sel = document.getElementById('daySelect');
+  const days = getSelectableDays();
+  sel.innerHTML = days.map(d =>
+    `<option value="${d.iso}"${d.already ? ' data-saved="1"':''}>${d.label} — ${d.fmt}${d.already ? ' ✓':''}</option>`
+  ).join('');
+  sel.value = days[0].iso;
+  onDayChange();
+}
+function onDayChange() {
+  const sel   = document.getElementById('daySelect');
+  const opt   = sel.options[sel.selectedIndex];
+  const saved = opt && opt.getAttribute('data-saved') === '1';
+  const iso   = sel.value;
+  const notice = document.getElementById('savedNotice');
+  const btn    = document.getElementById('saveBtn');
+  if(saved) {
+    const entry = getData().find(x => x.date === iso);
+    notice.innerHTML = `<div class="notice">✅ ${fmtDate(iso).main} ya registrado — puedes sobreescribir.</div>`;
+    if(entry) prefillChecks(entry);
+    btn.textContent = '🔄 Actualizar registro';
+  } else {
+    notice.innerHTML = '';
+    clearChecks();
+    btn.textContent = '✅ Guardar';
+  }
+}
+function prefillChecks(e) {
+  ['bike','trainer','home','steps','walk','rest','bad'].forEach(k => {
+    document.getElementById(k).checked = !!e[k];
+  });
+  const msg = document.getElementById('badDayMsg');
+  msg.classList.toggle('show', !!e.bad);
+  if(e.bad) msg.innerHTML = `💙 ${pickBadDayPhrase()}<br><br><strong>Tu racha sigue.</strong>`;
+}
+
+function onBadChange() {
+  const bad = document.getElementById('bad').checked;
+  const msg = document.getElementById('badDayMsg');
+  msg.classList.toggle('show', bad);
+  if(bad) {
+    ['bike','trainer','home','steps','walk','rest'].forEach(k => document.getElementById(k).checked = false);
+    msg.innerHTML = `💙 ${pickBadDayPhrase()}<br><br><strong>Tu racha sigue.</strong>`;
+  }
+}
+
+function getMissingDays() {
+  const data = getData();
+  return [1,2,3].map(n => daysAgoISO(n)).filter(iso => !data.some(x => x.date === iso));
+}
+function renderMissingAlert(missing) {
+  const el = document.getElementById('missingDaysAlert');
+  if(!missing.length) { el.innerHTML = ''; return; }
+  const n = missing.length;
+  const label = n === 1
+    ? `Tienes <strong>1 día sin registrar</strong> (${fmtDate(missing[0]).main})`
+    : `Tienes <strong>${n} días sin registrar</strong>. No pierdas el hilo.`;
+  el.innerHTML = `<div class="alert-missing">
+    <div class="al-icon">${n >= 2 ? '⚠️' : '📋'}</div>
+    <div class="al-body"><p class="al-title">${label}</p><p class="al-sub">Selecciónalo en el formulario y complétalo ahora.</p></div>
+    <button class="btn-scroll-form" onclick="scrollToForm()">Registrar</button>
+  </div>`;
+}
+function scrollToForm() {
+  document.getElementById('registerCard').scrollIntoView({ behavior:'smooth', block:'start' });
+  const missing = getMissingDays();
+  if(missing.length) {
+    document.getElementById('daySelect').value = missing[0];
+    onDayChange();
+  }
+}
+
+function saveDay() {
+  const date = document.getElementById('daySelect').value;
+  let data = getData();
+  data = data.filter(x => x.date !== date);
+  const entry = {
+    date,
+    bike: document.getElementById('bike').checked,
+    trainer: document.getElementById('trainer').checked,
+    home: document.getElementById('home').checked,
+    steps: document.getElementById('steps').checked,
+    walk: document.getElementById('walk').checked,
+    rest: document.getElementById('rest').checked,
+    bad: document.getElementById('bad').checked,
+  };
+  entry.points = calcPoints(entry);
+  data.push(entry);
+  saveData(data);
+
+  const btn = document.getElementById('saveBtn');
+  btn.textContent = '✅ ¡Guardado!';
+  btn.className = 'btn-save saved-state';
+  setTimeout(() => {
+    btn.textContent = '✅ Guardar';
+    btn.className = 'btn-save';
+  }, 1800);
+
+  const label = entry.bad ? 'Día malo registrado — la racha continúa 💙' : `${entry.points} pts — ¡bien hecho!`;
+  showToast(label);
+
+  clearChecks();
+  document.getElementById('badDayMsg').classList.remove('show');
+  populateDaySelect();
+  render();
+  checkPerfectWeek();
+}
+
+let _pendingDeleteDate = null;
+function deleteEntry(date) {
+  _pendingDeleteDate = date;
+  const { main } = fmtDate(date);
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="modal-overlay" id="delModal" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box">
+        <h3>🗑 Eliminar registro</h3>
+        <p>¿Borrar el registro del <strong>${main}</strong>? Esta acción no se puede deshacer.</p>
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
+          <button class="btn-modal-confirm" onclick="confirmDelete()">Eliminar</button>
+        </div>
+      </div>
+    </div>`);
+}
+function closeModal()    { document.getElementById('delModal')?.remove(); _pendingDeleteDate = null; }
+function confirmDelete() {
+  if(!_pendingDeleteDate) return;
+  saveData(getData().filter(x => x.date !== _pendingDeleteDate));
+  showToast('Registro eliminado');
+  closeModal();
+  populateDaySelect();
+  render();
+}
+
+function clearChecks() {
+  document.querySelectorAll('#checkGroup input[type=checkbox]').forEach(i => i.checked = false);
+}
+
+let _tt;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(getData(), null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `coach-emi-${todayISO()}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📁 Datos exportados');
+}
+function importData(ev) {
+  const file = ev.target.files[0];
+  if(!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if(!Array.isArray(d)) throw 0;
+      saveData(d);
+      populateDaySelect();
+      render();
+      showToast(`✅ Importados ${d.length} registros`);
+    } catch { showToast('❌ Error al importar'); }
+  };
+  r.readAsText(file);
+  ev.target.value = '';
+}
+
+function toggleHistory() {
+  showAll = !showAll;
+  document.getElementById('toggleBtn').textContent = showAll ? 'Ver menos' : 'Ver todo';
+  renderHistory();
+}
+
+function renderWeekCalendar(weekEntries) {
+  const now = new Date();
+  const dow = now.getDay();
+  const days = [];
+  for(let i = 0; i < 7; i++) {
+    const offset = i - ((dow + 6) % 7);
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    const iso = isoOf(d);
+    const entry = weekEntries.find(x => x.date === iso);
+    const isToday = offset === 0;
+    days.push({ iso, label: WEEK_DAYS[i], entry, isToday });
+  }
+  document.getElementById('weekCalendar').innerHTML = days.map(({ label, entry, isToday }) => {
+    let dc = 'wc-empty', sym = '·', pts = '';
+    if(entry) {
+      if(entry.bad) { dc='wc-bad'; sym='😵'; }
+      else if(entry.points >= 7) { dc='wc-high'; sym='✓'; pts=entry.points+'p'; }
+      else if(entry.points >= 4) { dc='wc-med';  sym='✓'; pts=entry.points+'p'; }
+      else                        { dc='wc-low';  sym='✓'; pts=entry.points+'p'; }
+    }
+    if(isToday) dc += ' wc-today';
+    return `<div class="wc-day"><div class="wc-label">${label}</div><div class="wc-dot ${dc}">${sym}</div><div class="wc-pts">${pts}</div></div>`;
+  }).join('');
+}
+
+/* ── SMART GOAL ── */
+function getSmartGoal() {
+  const week = weekData();
+  const dow  = todayDow();
+  const bikeN    = week.filter(x => x.bike).length;
+  const trainerN = week.filter(x => x.trainer).length;
+  const homeN    = week.filter(x => x.home).length;
+  const restDays = 6 - ((dow + 6) % 7);
+
+  const opts = [];
+
+  if(dow === 3 && trainerN === 0) {
+    opts.push({ key:'trainer', icon:'🏋️', name:'Fuerza con entrenador', pts:4,
+      reason:'Hoy es miércoles — sesión clave de la semana.', tag:'PRIORITARIO' });
+  } else if(trainerN === 0 && dow >= 4) {
+    opts.push({ key:'trainer', icon:'🏋️', name:'Sesión de entrenador', pts:4,
+      reason:'Aún no has hecho la sesión clave de la semana.', tag:'IMPORTANTE' });
+  }
+
+  if(bikeN < 2) {
+    const need = 2 - bikeN;
+    opts.push({ key:'bike', icon:'🚴', name:'Salir en bici', pts:3,
+      reason: bikeN === 0
+        ? `Llevas 0/2 esta semana — quedan ${restDays} día${restDays!==1?'s':''}.`
+        : `Llevas ${bikeN}/2 — necesitas ${need} más.`,
+      tag: restDays <= 2 ? 'URGENTE' : 'PRIORITARIO' });
+  }
+
+  if(homeN < 1 && dow >= 4) {
+    opts.push({ key:'home', icon:'💪', name:'5 min de fuerza en casa', pts:2,
+      reason:'Sesión rápida para cerrar la semana con todo.', tag:'COMPLETAR' });
+  }
+
+  opts.push({ key:'steps', icon:'👣', name:'7000 pasos', pts:2,
+    reason:'Mantén el cuerpo activo — base mínima del día.', tag:'BASE' });
+
+  // Caso: todo hecho
+  const allDone = bikeN >= 2 && trainerN >= 1 && homeN >= 1;
+  if(allDone) {
+    return {
+      primary: { key:'rest', icon:'🌟', name:'Semana cumplida', pts:0,
+        reason:'¡Todos los objetivos clave están! Hoy descanso o suma libre.',
+        tag:'COMPLETADO', done:true },
+      alts: [
+        { icon:'😌', name:'Descanso consciente', pts:0 },
+        { icon:'🚶', name:'Caminata 20 min', pts:1 },
+        { icon:'👣', name:'7000 pasos', pts:2 },
+      ]
+    };
+  }
+
+  const primary = opts[0];
+  const altsKeys = new Set([primary.key]);
+  const alts = [];
+  for(const o of opts.slice(1)) {
+    if(altsKeys.has(o.key)) continue;
+    altsKeys.add(o.key);
+    alts.push({ icon:o.icon, name:o.name, pts:o.pts });
+    if(alts.length >= 3) break;
+  }
+  if(!alts.some(a => a.name.includes('Caminata')) && primary.key !== 'walk') {
+    alts.push({ icon:'🚶', name:'Caminata 20 min', pts:1 });
+  }
+  return { primary, alts: alts.slice(0, 3) };
+}
+
+function renderSmartGoal() {
+  const { primary, alts } = getSmartGoal();
+  document.getElementById('goalIcon').textContent   = primary.icon;
+  document.getElementById('goalName').textContent   = primary.name;
+  document.getElementById('goalReason').textContent = primary.reason;
+  document.getElementById('goalPts').textContent    = primary.pts > 0 ? `+${primary.pts} pts` : 'libre';
+
+  const tag = document.getElementById('goalTag');
+  tag.textContent = primary.tag;
+  let cls = 'goal-tag';
+  if(primary.done) cls += ' tag-done';
+  else if(primary.tag === 'URGENTE') cls += ' tag-urgent';
+  tag.className = cls;
+
+  document.getElementById('goalIconBox').className = 'goal-icon-box' + (primary.done ? ' done' : '');
+
+  const altsEl = document.getElementById('goalAlts');
+  const list   = document.getElementById('goalAltList');
+  if(alts && alts.length) {
+    altsEl.style.display = 'block';
+    list.innerHTML = alts.map(a =>
+      `<span class="goal-alt">${a.icon} ${a.name} <span class="alt-pts">${a.pts > 0 ? '+'+a.pts : 'libre'}</span></span>`
+    ).join('');
+  } else {
+    altsEl.style.display = 'none';
+  }
+}
+
+function render() {
+  const data = getData();
+  const week = weekData();
+  const bikeN    = week.filter(x => x.bike).length;
+  const trainerN = week.filter(x => x.trainer).length;
+  const homeN    = week.filter(x => x.home).length;
+  const pts      = week.reduce((a,b) => a + b.points, 0);
+
+  // Hero — racha protagonista
+  const streak = calcStreak(data);
+  const prevStreak = +localStorage.getItem('_lastStreak') || 0;
+  document.getElementById('heroNum').textContent = streak;
+  document.getElementById('heroFlame').textContent = streakIcon(streak);
+  document.getElementById('heroTagline').textContent = streakTagline(streak);
+  if(streak > prevStreak) {
+    const el = document.getElementById('heroNum');
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 450);
+  }
+  localStorage.setItem('_lastStreak', streak);
+
+  // Saludo según hora
+  const now = new Date();
+  const hour = now.getHours();
+  let greeting;
+  if(hour < 12)      greeting = '☀️ Buenos días';
+  else if(hour < 19) greeting = '👋 Buenas tardes';
+  else if(hour < 23) greeting = '🌙 Buenas noches';
+  else               greeting = '🌌 Aún despierto';
+  document.getElementById('heroGreeting').textContent = greeting;
+
+  // Fecha en cabecera (compacta)
+  const dayShort   = ['dom','lun','mar','mié','jue','vie','sáb'][now.getDay()];
+  const monthShort = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][now.getMonth()];
+  document.getElementById('heroBrandDate').textContent = `${dayShort} ${now.getDate()} ${monthShort}`;
+
+  // Barra de progreso semanal del hero
+  const weekPct = Math.min((pts/18)*100, 100);
+  const fill = document.getElementById('hwbFill');
+  fill.style.width = weekPct + '%';
+  fill.classList.toggle('perfect', pts >= 18);
+  document.getElementById('hwbText').textContent = `${pts} / 18 pts esta semana${pts >= 18 ? ' 🏆' : ''}`;
+  document.getElementById('hwbPct').textContent = Math.round(weekPct) + '%';
+
+  renderSmartGoal();
+  renderMissingAlert(getMissingDays());
+  renderWeekCalendar(week);
+
+  document.getElementById('bikeVal').textContent    = `${bikeN}/2`;
+  document.getElementById('trainerVal').textContent = trainerN > 0 ? '✔' : '—';
+  document.getElementById('homeVal').textContent    = `${homeN}/1`;
+  document.getElementById('statBike').className    = 'stat-box' + (bikeN >= 2 ? ' done' : bikeN === 1 ? ' warn' : '');
+  document.getElementById('statTrainer').className = 'stat-box' + (trainerN > 0 ? ' done' : '');
+  document.getElementById('statHome').className    = 'stat-box' + (homeN >= 1 ? ' done' : '');
+
+  const bar = document.getElementById('bar');
+  bar.style.width = Math.min((pts/18)*100, 100) + '%';
+  bar.classList.toggle('perfect', pts >= 18);
+  document.getElementById('ptsLabel').textContent = `${pts} puntos esta semana${pts >= 18 ? ' 🏆' : ''}`;
+
+  if(data.length) {
+    const total = data.reduce((a,b) => a + b.points, 0);
+    const avg   = (total / data.length).toFixed(1);
+    const best  = bestStreak(data);
+    const perfectN = countPerfectWeeks(data);
+    const titleEl = document.getElementById('statsTitle');
+    titleEl.innerHTML = `📊 Progreso total${perfectN > 0 ? `<span class="perfect-badge">🏆 ${perfectN} ${perfectN === 1 ? 'semana perfecta':'semanas perfectas'}</span>` : ''}`;
+    document.getElementById('statsRow').innerHTML = `
+      <div class="mini-stat"><div class="val">${data.length}</div><div class="lbl">días registrados</div></div>
+      <div class="mini-stat"><div class="val">${avg}</div><div class="lbl">pts media/día</div></div>
+      <div class="mini-stat"><div class="val">${best}</div><div class="lbl">mejor racha</div></div>`;
+  } else {
+    document.getElementById('statsTitle').textContent = '📊 Progreso total';
+    document.getElementById('statsRow').innerHTML = '<p class="empty-msg">Sin datos aún.</p>';
+  }
+  renderHistory();
+}
+
+function renderHistory() {
+  const data  = getData().sort((a,b) => b.date.localeCompare(a.date));
+  const btn   = document.getElementById('toggleBtn');
+  btn.style.display = data.length > 7 ? 'block' : 'none';
+  const shown = showAll ? data : data.slice(0, 7);
+  if(!shown.length) {
+    document.getElementById('historyList').innerHTML = '<p class="empty-msg">Sin registros todavía.</p>';
+    return;
+  }
+  document.getElementById('historyList').innerHTML = shown.map(e => {
+    const { main } = fmtDate(e.date);
+    const chips = ACTS.filter(a => e[a.key]).map(a => `<span class="chip">${a.emoji} ${a.name}</span>`).join('');
+    const badChip = e.bad ? `<span class="chip chip-bad">😵 Día malo</span>` : '';
+    const noActs  = !ACTS.some(a => e[a.key]) && !e.bad
+      ? `<span class="chip" style="color:#9ca3af">Sin actividad</span>` : '';
+    return `<div class="history-item">
+      <div class="day-dot ${dotClass(e.points, e.bad)}"></div>
+      <div class="h-date"><div class="d-main">${main}</div></div>
+      <div class="h-chips">${chips}${badChip}${noActs}</div>
+      <div class="h-pts ${ptsClass(e.points, e.bad)}">${e.points} pts</div>
+      <button class="btn-del" onclick="deleteEntry('${e.date}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function countPerfectWeeks(data) {
+  const buckets = {};
+  for(const e of data) {
+    const d = toLocal(e.date);
+    const diff = (d.getDay() + 6) % 7;
+    const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() - diff);
+    const key = isoOf(monday);
+    buckets[key] = (buckets[key] || 0) + e.points;
+  }
+  return Object.values(buckets).filter(p => p >= 18).length;
+}
+
+function checkPerfectWeek() {
+  const week = weekData();
+  const pts  = week.reduce((a,b) => a + b.points, 0);
+  if(pts < 18) return;
+  const flagKey = '_perfectShown_' + mondayISO();
+  if(localStorage.getItem(flagKey)) return;
+  localStorage.setItem(flagKey, '1');
+  showPerfectWeekCelebration(pts);
+}
+
+function showPerfectWeekCelebration(pts) {
+  const overlay = document.createElement('div');
+  overlay.className = 'perfect-week-overlay';
+  overlay.id = 'pwOverlay';
+  overlay.innerHTML = `
+    <div class="perfect-week-card">
+      <div class="pw-emoji">🏆</div>
+      <h2>¡Semana perfecta!</h2>
+      <p>Has alcanzado <strong>${pts} puntos</strong> esta semana. Tu cuerpo te lo agradece.</p>
+      <button class="btn-pw" onclick="closePerfectWeek()">¡A por la siguiente!</button>
+    </div>`;
+  overlay.onclick = e => { if(e.target === overlay) closePerfectWeek(); };
+  document.body.appendChild(overlay);
+  launchConfetti();
+}
+function closePerfectWeek() {
+  document.getElementById('pwOverlay')?.remove();
+  document.querySelectorAll('.confetti').forEach(c => c.remove());
+}
+function launchConfetti() {
+  const colors = ['#fbbf24','#f59e0b','#ec4899','#8b5cf6','#22c55e','#ef4444'];
+  for(let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + 'vw';
+    c.style.top = '-20px';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay = (Math.random()*0.6) + 's';
+    c.style.animationDuration = (2 + Math.random()*2) + 's';
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+function showPointsModal() {
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="modal-overlay" id="ptsModal" onclick="if(event.target===this)closePointsModal()">
+      <div class="modal-box">
+        <h3>📊 Sistema de puntos</h3>
+        <p>Cada actividad suma puntos. La meta semanal es <strong>18 pts</strong>.</p>
+        <table class="pts-table">
+          <tr><td>🏋️ Entrenador</td><td>+4</td></tr>
+          <tr><td>🚴 Bici</td><td>+3</td></tr>
+          <tr><td>💪 Fuerza casa</td><td>+2</td></tr>
+          <tr><td>👣 7k pasos</td><td>+2</td></tr>
+          <tr><td>🚶 Caminata</td><td>+1</td></tr>
+          <tr><td>📌 Por registrar</td><td>+1</td></tr>
+        </table>
+        <p><strong>🏆 Semana perfecta:</strong> al llegar a 18 pts se celebra y queda registrada en tu progreso total.</p>
+        <p><strong>💙 Días malos:</strong> registrarlos no resta puntos pero <em>mantiene tu racha</em> — la honestidad cuenta.</p>
+        <div class="modal-actions">
+          <button class="btn-modal-primary" onclick="closePointsModal()">Entendido</button>
+        </div>
+      </div>
+    </div>`);
+}
+function closePointsModal() { document.getElementById('ptsModal')?.remove(); }
+
+function maybeShowOnboarding() {
+  if(localStorage.getItem('_onboarded')) return;
+  if(getData().length > 0) { localStorage.setItem('_onboarded','1'); return; }
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="modal-overlay" id="onbModal">
+      <div class="modal-box">
+        <h3>👋 Bienvenid@ a Coach Emi</h3>
+        <p>Tu coach personal de hábitos saludables. Así funciona:</p>
+        <div class="onb-list">
+          <div class="onb-step">
+            <div class="onb-step-title">📝 Registra cada día</div>
+            <p class="onb-step-text">Cada mañana, marca lo que hiciste ayer. Cuesta 30 segundos.</p>
+          </div>
+          <div class="onb-step">
+            <div class="onb-step-title">🎯 Sigue la guía diaria</div>
+            <p class="onb-step-text">"Hoy toca" te dice qué priorizar según tu semana.</p>
+          </div>
+          <div class="onb-step">
+            <div class="onb-step-title">🔥 Construye racha</div>
+            <p class="onb-step-text">Días seguidos = hábito. Hasta los días malos cuentan si los registras.</p>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-modal-primary" onclick="closeOnboarding()">Empezar 💪</button>
+        </div>
+      </div>
+    </div>`);
+}
+function closeOnboarding() {
+  localStorage.setItem('_onboarded','1');
+  document.getElementById('onbModal')?.remove();
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('_theme', theme);
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+function initTheme() {
+  const saved = localStorage.getItem('_theme');
+  if(saved) { applyTheme(saved); return; }
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light');
+}
+
+function shareWeek() {
+  const week = weekData();
+  const pts = week.reduce((a,b) => a + b.points, 0);
+  const data = getData();
+  const streak = calcStreak(data);
+  const bikeN = week.filter(x => x.bike).length;
+  const trainerN = week.filter(x => x.trainer).length;
+
+  const dots = [];
+  const now = new Date();
+  const dow = now.getDay();
+  for(let i = 0; i < 7; i++) {
+    const offset = i - ((dow + 6) % 7);
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    const iso = isoOf(d);
+    const e = week.find(x => x.date === iso);
+    if(!e) dots.push('⚪');
+    else if(e.bad) dots.push('⚫');
+    else if(e.points >= 7) dots.push('🟢');
+    else if(e.points >= 4) dots.push('🟡');
+    else dots.push('🔴');
+  }
+
+  const text = `🏆 Mi semana en Coach Emi
+━━━━━━━━━━━━━━━━━━
+${dots.join(' ')}
+🔥 Racha: ${streak} días
+⭐ ${pts}/18 pts
+🚴 Bici: ${bikeN}/2  🏋️ Entrenador: ${trainerN > 0 ? '✓' : '—'}${pts >= 18 ? '\n🎉 ¡Semana perfecta!' : ''}`;
+
+  if(navigator.share) {
+    navigator.share({ text, title: 'Coach Emi' }).catch(() => copyToClipboard(text));
+  } else {
+    copyToClipboard(text);
+  }
+}
+function copyToClipboard(text) {
+  navigator.clipboard?.writeText(text)
+    .then(() => showToast('📋 Resumen copiado al portapapeles'))
+    .catch(() => showToast('❌ No se pudo copiar'));
+}
+
+initTheme();
+populateDaySelect();
+render();
+maybeShowOnboarding();
+checkPerfectWeek();
+
+</script>
+
+<!-- Notification settings modal (injected by JS) -->
+
+<script>
+// ── Service Worker registration ───────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('[PWA] SW registered:', reg.scope);
+        window._swReg = reg;
+        // Reschedule reminder in case SW was killed
+        const time = localStorage.getItem('_reminderTime');
+        if (time && Notification.permission === 'granted') {
+          sendSwMessage({ type: 'SCHEDULE_REMINDER', timeStr: time, hasLoggedToday: false });
+        }
+      })
+      .catch(err => console.warn('[PWA] SW error:', err));
+  });
+}
+
+function sendSwMessage(data) {
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage(data);
+  } else if (window._swReg && window._swReg.active) {
+    window._swReg.active.postMessage(data);
+  }
+}
+
+// ── Notification modal ────────────────────────────────────────────────────────
+function openNotifModal() {
+  const savedTime = localStorage.getItem('_reminderTime') || '09:00';
+  const perm = Notification.permission;
+  const statusHtml = perm === 'granted'
+    ? `<div class="notif-status ok">✅ Notificaciones activadas</div>`
+    : perm === 'denied'
+    ? `<div class="notif-status warn">⚠️ Bloqueadas en ajustes del navegador</div>`
+    : `<div class="notif-status warn">⏳ Permiso pendiente — pulsa "Activar"</div>`;
+  const hasReminder = !!localStorage.getItem('_reminderTime');
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="notif-modal-overlay" id="notifModal" onclick="if(event.target===this)closeNotifModal()">
+      <div class="notif-modal-box">
+        <h3>🔔 Recordatorio diario</h3>
+        <p>Recibe una notificación cada día a la hora que elijas para no olvidar registrar tus actividades.</p>
+        ${statusHtml}
+        <div class="notif-time-row">
+          <label for="notifTime">Hora:</label>
+          <input type="time" id="notifTime" class="notif-time-input" value="${savedTime}">
+        </div>
+        <div class="notif-modal-actions">
+          <button class="btn-notif-save" onclick="saveReminderTime()">🔔 Activar</button>
+          <button class="btn-notif-cancel" onclick="closeNotifModal()">Cerrar</button>
+        </div>
+        ${hasReminder ? '<button class="btn-notif-off" onclick="disableReminder()">🔕 Desactivar recordatorio</button>' : ''}
+      </div>
+    </div>`);
+}
+
+function closeNotifModal() {
+  document.getElementById('notifModal')?.remove();
+}
+
+async function saveReminderTime() {
+  const timeStr = document.getElementById('notifTime').value;
+  if (!timeStr) return;
+
+  let perm = Notification.permission;
+  if (perm === 'default') {
+    perm = await Notification.requestPermission();
+  }
+
+  if (perm !== 'granted') {
+    showToast('⚠️ Activa los permisos de notificación en ajustes');
+    closeNotifModal();
+    return;
+  }
+
+  localStorage.setItem('_reminderTime', timeStr);
+  sendSwMessage({ type: 'SCHEDULE_REMINDER', timeStr, hasLoggedToday: false });
+  closeNotifModal();
+  showToast('🔔 Recordatorio activado a las ' + timeStr);
+}
+
+function disableReminder() {
+  localStorage.removeItem('_reminderTime');
+  sendSwMessage({ type: 'CANCEL_REMINDER' });
+  closeNotifModal();
+  showToast('🔕 Recordatorio desactivado');
+}
+
+// Update bell icon based on state
+function updateBellIcon() {
+  const bell = document.getElementById('bellToggle');
+  if (!bell) return;
+  const active = !!localStorage.getItem('_reminderTime') && Notification.permission === 'granted';
+  bell.textContent = active ? '🔔' : '🔕';
+}
+
+// Call after page loads
+window.addEventListener('load', updateBellIcon);
+</script>
+</body>
+</html>
